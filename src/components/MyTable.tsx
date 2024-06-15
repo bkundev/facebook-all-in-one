@@ -1,0 +1,194 @@
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Button, Dropdown, Input, Row, Table, Tag, Space } from "antd";
+import {
+  DownloadOutlined,
+  DeleteOutlined,
+  ReloadOutlined,
+} from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
+
+export default function MyTable({
+  data = [],
+  columns = [],
+  size = "middle",
+  expandable = false,
+  selectable = false,
+  searchable = false,
+  loading = false,
+  loadingOnReloadButton = false,
+  onClickReload,
+  onClickExport,
+  onClickDelete,
+  keyExtractor = (item) => item.key,
+}: Readonly<{
+  data: any[],
+  columns: any[],
+  size?: "small" | "middle" | "large",
+  expandable?: boolean,
+  selectable?: boolean,
+  searchable?: boolean,
+  loading?: boolean,
+  loadingOnReloadButton?: boolean,
+  onClickReload?: () => void,
+  onClickExport?: (data: any[], type: string) => void,
+  onClickDelete?: (data: any[]) => void,
+  keyExtractor?: (item: any) => string
+}>) {
+  const { t } = useTranslation();
+  const [search, setSearch] = useState("");
+  const [dataSelected, setDataSelected] = useState([]);
+
+  const dataSearched = useMemo(
+    () =>
+      data
+        .filter((row) =>
+          Object.values(row).some(
+            (value) =>
+              typeof value === "string" &&
+              value.toLowerCase().includes(search.toLowerCase())
+          )
+        )
+        .map((_) => ({
+          ..._,
+          key: keyExtractor(_), // inject key for antd table
+        })),
+    [data, search]
+  );
+
+  const currentDataSource = useRef(dataSearched);
+  useEffect(() => {
+    currentDataSource.current = dataSearched;
+  }, [dataSearched]);
+
+  const onSelectChange = (selectedRowKeys, selectedRows) => {
+    setDataSelected(selectedRows);
+  };
+
+  const rowSelection = {
+    type: "checkbox",
+    selectedRowKeys: dataSelected.map(keyExtractor),
+    onChange: onSelectChange,
+    selections: [
+      {
+        key: "select_all",
+        text: t("Select all"),
+        onSelect: () => setDataSelected(currentDataSource.current),
+      },
+      {
+        key: "invert_selection",
+        text: t("Invert selection"),
+        onSelect: () =>
+          setDataSelected(
+            currentDataSource.current.filter(
+              (_) =>
+                !dataSelected.find((a) => keyExtractor(a) === keyExtractor(_))
+            )
+          ),
+      },
+      {
+        key: "unselect_all",
+        text: t("Unselect all"),
+        onSelect: () =>
+          setDataSelected(
+            dataSelected.filter(
+              (_) =>
+                !currentDataSource.current.find(
+                  (a) => keyExtractor(a) === keyExtractor(_)
+                )
+            )
+          ),
+      },
+    ],
+  };
+
+  const renderTitle = () => (
+    <Row justify="space-between" style={{ margin: "5px" }}>
+      <Row align="middle">
+        <Space wrap>
+          {typeof onClickReload === "function" && (
+            <Button
+              type="primary"
+              icon={<ReloadOutlined spin={loadingOnReloadButton} />}
+              onClick={onClickReload}
+            >
+              {t("Reload")}
+            </Button>
+          )}
+
+          {typeof onClickExport === "function" && (
+            <Dropdown
+              menu={{
+                items: [
+                  { key: "json", label: ".json" },
+                  { key: "csv", label: ".csv" },
+                ],
+                onClick: (e) => onClickExport(dataSelected, e.key),
+              }}
+            >
+              <Button type="primary" icon={<DownloadOutlined />}>
+                {t("Export")}
+              </Button>
+            </Dropdown>
+          )}
+
+          {typeof onClickDelete === "function" && (
+            <Button
+              danger
+              type="primary"
+              icon={<DeleteOutlined />}
+              onClick={() => onClickDelete(dataSelected)}
+            >
+              {t("Delete")}
+            </Button>
+          )}
+
+          {dataSelected.length ? (
+            <Tag
+              closable
+              onClose={() => setDataSelected([])}
+              color="processing"
+              style={{ marginLeft: "10px", fontWeight: "bold" }}
+            >
+              {t("Selected {{count}} messages", { count: dataSelected.length })}
+            </Tag>
+          ) : null}
+        </Space>
+      </Row>
+
+      {searchable && (
+        <Input.Search
+          placeholder={t("Search")}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ marginVertical: 16, maxWidth: 300 }}
+        />
+      )}
+    </Row>
+  );
+
+  return (
+    <Table
+      sticky
+      fixedHeader
+      size={size}
+      loading={loading}
+      scroll={{ y: "calc(100vh - 300px)" }}
+      dataSource={dataSearched}
+      columns={columns}
+      showSorterTooltip={false}
+      onChange={(pagination, filters, sorter, extra) => {
+        currentDataSource.current = extra.currentDataSource ?? [];
+      }}
+      rowSelection={selectable ? rowSelection : false}
+      expandable={expandable}
+      title={renderTitle}
+      pagination={{
+        position: ["bottomCenter"],
+        showSizeChanger: true,
+        showTotal: (total, range) => t("Total {{total}} items", { total }),
+        size: "default",
+        //   simple: true,
+        style: { alignItems: "center" },
+      }}
+    />
+  );
+}
