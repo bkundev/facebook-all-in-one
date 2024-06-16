@@ -21,7 +21,7 @@ export default function ProfileHeader({
           <a href="https:/fb.com/me" target="_blank">
             <Title level={4} style={styles.name(titleColor)}>
               {profile?.name}
-              {profile?.alternateName && ` (${profile?.alternateName})`}
+              {/* {profile?.alternateName && ` (${profile?.alternateName})`} */}
             </Title>
           </a>
           <Text style={styles.id(textColor)}>{profile?.uid}</Text>

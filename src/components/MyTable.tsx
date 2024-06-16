@@ -171,7 +171,8 @@ export default function MyTable({
       fixedHeader
       size={size}
       loading={loading}
-      scroll={{ y: "calc(100vh - 300px)" }}
+      scroll={{ y: "calc(100vh - 300px)", x: "max-content" }}
+      tableLayout='auto'
       dataSource={dataSearched}
       columns={columns}
       showSorterTooltip={false}

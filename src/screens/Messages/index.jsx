@@ -172,7 +172,7 @@ export default function Messages() {
             dataIndex: "id",
             key: "id",
             sorter: (a, b) => a.id > b.id,
-            width: 200,
+            width: 150,
         },
         {
             title: t("Messages"),
@@ -181,7 +181,7 @@ export default function Messages() {
             sorter: (a, b) => a.count - b.count,
             render: (text, record, index) => numberWithCommas(record.count),
             width: 100,
-            align: "center",
+            align: "right",
         },
         {
             title: t("Type"),
@@ -202,6 +202,7 @@ export default function Messages() {
             ],
             onFilter: (value, record) => record.isGroup == value,
             width: 100,
+            align: 'right'
         },
         {
             title: t("Action"),
