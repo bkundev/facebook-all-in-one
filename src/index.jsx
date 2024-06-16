@@ -1,12 +1,13 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import { App, ConfigProvider, theme } from "antd";
 import useStore, { selectors } from "./store";
+import './locales'
 import "antd/dist/reset.css";
 import "./assets/style.css";
+import MyApp from "./MyApp";
 
-export function MyApp() {
+export function Container() {
   const darkMode = useStore(selectors.darkMode);
 
   return (
@@ -18,7 +19,7 @@ export function MyApp() {
     >
       <App>
         <HashRouter>
-          <h1>Useful scripts: Facebook all in one</h1>
+          <MyApp />
         </HashRouter>
       </App>
     </ConfigProvider>
@@ -27,4 +28,4 @@ export function MyApp() {
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<MyApp />);
+root.render(<Container />);
