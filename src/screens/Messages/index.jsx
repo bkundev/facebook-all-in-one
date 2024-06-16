@@ -96,7 +96,7 @@ export default function Messages() {
             title: t("Name"),
             dataIndex: "name",
             key: "name",
-            sorter: (a, b) => a.name > b.name,
+            sorter: (a, b) => a.name.localeCompare(b.name),
             render: (text, record, index) => {
                 return (
                     <Row align="middle">
