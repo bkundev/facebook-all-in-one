@@ -1,1 +1,1 @@
-export const ExtensionID = "heoejcamgchindphgghdhmjpgmldnepl";
+export const ExtensionID = 'heoejcamgchindphgghdhmjpgmldnepl';

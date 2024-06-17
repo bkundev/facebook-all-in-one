@@ -1,10 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Dropdown, Input, Row, Table, Tag, Space } from "antd";
-import {
-  DownloadOutlined,
-  DeleteOutlined,
-  ReloadOutlined,
-} from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
 export default function MyTable({
@@ -108,7 +103,9 @@ export default function MyTable({
           {typeof onClickReload === "function" && (
             <Button
               type="primary"
-              icon={<ReloadOutlined spin={loadingOnReloadButton} />}
+              icon={loadingOnReloadButton
+                ? <i className="fa-solid fa-rotate-right fa-spin"></i>
+                : <i className="fa-solid fa-rotate-right"></i>}
               onClick={onClickReload}
             >
               {t("Reload")}
@@ -125,7 +122,7 @@ export default function MyTable({
                 onClick: (e) => onClickExport(dataSelected, e.key),
               }}
             >
-              <Button type="primary" icon={<DownloadOutlined />}>
+              <Button type="primary" icon={<i className="fa-solid fa-download"></i>}>
                 {t("Export")}
               </Button>
             </Dropdown>
@@ -135,7 +132,7 @@ export default function MyTable({
             <Button
               danger
               type="primary"
-              icon={<DeleteOutlined />}
+              icon={<i className="fa-solid fa-trash-can"></i>}
               onClick={() => onClickDelete(dataSelected)}
             >
               {t("Delete")}
