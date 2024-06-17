@@ -133,7 +133,7 @@ export default function Messages() {
                                 }}
                             >
                                 <Space>
-                                    <Avatar.Group maxCount={10}>
+                                    <Avatar.Group max={{ count: 10 }}>
                                         {record.participants
                                             .filter((_) => _.id != profile?.id)
                                             .map((_) => (
@@ -180,6 +180,15 @@ export default function Messages() {
             key: "count",
             sorter: (a, b) => a.count - b.count,
             render: (text, record, index) => numberWithCommas(record.count),
+            width: 100,
+            align: "right",
+        },
+        {
+            title: t("Member"),
+            dataIndex: "participants",
+            key: "participants",
+            sorter: (a, b) => a.participants.length - b.participants.length,
+            render: (text, record, index) => numberWithCommas(record.participants.length),
             width: 100,
             align: "right",
         },

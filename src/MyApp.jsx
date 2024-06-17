@@ -83,8 +83,16 @@ export default function MyApp() {
     {
       label: t("Messages"),
       icon: <i className="fa-brands fa-facebook-messenger"></i>,
-      path: "/scanner/messages",
-      element: <Messages />,
+      // path: "/scanner/messages",
+      // element: <Messages />,
+      children: [
+        {
+          label: t("Messages manager"),
+          icon: <i className="fa-brands fa-facebook-messenger"></i>,
+          path: "/scanner/messages",
+          element: <Messages />,
+        }
+      ]
     },
     {
       label: t("Friends"),
