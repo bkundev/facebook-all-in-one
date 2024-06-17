@@ -26,6 +26,7 @@
         "Member": "Member",
         "Selected {{count}} messages": "Selected {{count}} messages",
         "Export": "Export",
+        "Export selected": "Export selected",
         "Delete": "Delete",
         "Select all": "Select all",
         "Invert selection": "Invert selection",

@@ -123,7 +123,7 @@ export default function MyTable({
               }}
             >
               <Button type="primary" icon={<i className="fa-solid fa-download"></i>}>
-                {t("Export")}
+                {dataSelected?.length ? t("Export selected") : t("Export")}
               </Button>
             </Dropdown>
           )}

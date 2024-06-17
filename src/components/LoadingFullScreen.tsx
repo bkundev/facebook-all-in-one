@@ -1,5 +1,5 @@
 import React from "react";
-import { LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 
 export default function LoadingFullScreen({ onlyFillContainer = false }) {
     return (
@@ -19,20 +19,16 @@ export default function LoadingFullScreen({ onlyFillContainer = false }) {
                         left: 0,
                         width: "100%",
                         height: "100%",
+                        background: '#111d',
+                        backdropFilter: "blur(3px)",
                     }),
-                background: "#fffd",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                zIndex: 9999,
             }}
         >
-            <LoadingOutlined style={{ color: "blue", fontSize: "3em" }} />
-            {/* <Spin size="large" /> */}
-            {/* <i
-        className="fa-solid fa-circle-notch fa-spin fa-2xl"
-        style={{ fontSize: "3em", color: "blue" }}
-      ></i> */}
+            {/* <LoadingOutlined style={{ color: "blue", fontSize: "3em" }} /> */}
+            <Spin size="large" />
         </div>
     );
 }

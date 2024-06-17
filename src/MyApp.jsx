@@ -154,7 +154,7 @@ export default function MyApp() {
                     </Space>
                 </Header>
 
-                <Content style={{ margin: '0 16px', position: 'relative' }}>
+                <Content style={{ padding: '10px', position: 'relative' }}>
                     {!profile ? (
                         <LoadingFullScreen onlyFillContainer />
                     ) : (

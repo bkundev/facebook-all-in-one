@@ -3,6 +3,7 @@ import { App, Avatar, Button, Dropdown, Row, Space, Tag, Tooltip, Typography } f
 import { MessageTwoTone } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import fileDownload from 'js-file-download';
+import { useNavigate } from 'react-router-dom';
 import useStore, { selectors } from '../../store';
 import MyTable from '../../components/MyTable';
 import { getAllMessages, getFbUrlFromId } from '../../utils/facebook';
@@ -13,6 +14,8 @@ const { Title } = Typography;
 export default function AllMessages() {
     const { message } = App.useApp();
     const { t } = useTranslation();
+    const navigate = useNavigate();
+
     const profile = useStore(selectors.profile) ?? {};
     const messages = useStore(selectors.messages) ?? [];
     const setMessages = useStore(selectors.setMessages);
@@ -65,6 +68,12 @@ export default function AllMessages() {
 
     const onClickDelete = selectedData => {
         console.log(selectedData);
+    };
+
+    const onClickFirstMessages = threadId => () => {
+        navigate('/messages/first', {
+            state: { threadId: threadId },
+        });
     };
 
     const columns = [
@@ -207,6 +216,7 @@ export default function AllMessages() {
                             type="primary"
                             icon={<i className="fa-solid fa-clock-rotate-left"></i>}
                             style={{ marginRight: '5px' }}
+                            onClick={onClickFirstMessages(record.id)}
                         ></Button>
                     </Tooltip>
                     <Tooltip placement="topLeft" title={t('Download')}>
