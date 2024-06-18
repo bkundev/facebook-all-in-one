@@ -23,3 +23,14 @@ export function numberWithCommas(x) {
     if (!x) return 0;
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
+
+export function formatTime(t) {
+    return new Date(parseInt(t)).toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: !0,
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    });
+}

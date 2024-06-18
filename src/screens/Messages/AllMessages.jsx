@@ -138,7 +138,10 @@ export default function AllMessages() {
                                 </Space>
                             </Dropdown>
                         ) : (
-                            <Avatar shape="square" src={record.participants[0].avatar} />
+                            <Avatar
+                                shape="square"
+                                src={record.image || record.participants[0].avatar}
+                            />
                         )}
                         <a href={record.url} target="_blank" style={{ marginLeft: '10px' }}>
                             <b>{record.name}</b>

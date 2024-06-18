@@ -26,7 +26,7 @@ export default function LanguagePicker() {
             menu={{
                 selectable: true,
                 items: languageMenuItems,
-                defaultSelectedKeys: [localStorage.lang || "en"],
+                defaultSelectedKeys: [i18n.language || localStorage.lang || "en"],
                 onClick: handleChangeLanguage,
             }}
             arrow
