@@ -110,6 +110,7 @@ export async function getAllMessages() {
         'viewer(){message_threads{count,nodes{customization_info{emoji,outgoing_bubble_color,participant_customizations{participant_id,nickname}},all_participants{nodes{messaging_actor{name,id,profile_picture}}},thread_type,name,messages_count,image,id}}}'
     );
     const msgData = JSON.parse(res);
+    console.log(msgData);
     let { count: threadCount, nodes } = msgData.viewer.message_threads;
     let data = nodes
         .map((node, i) => ({ ...node, recent: i })) // inject recent rank
@@ -133,7 +134,7 @@ export async function getAllMessages() {
             return {
                 ...d,
                 url: `https://www.facebook.com/messages/t/${d.id}`,
-                isGroup: d.type === 'GROUP',
+                isGroup: d.type === 'GROUP' || d.type === 'COMMUNITY_GROUP',
             };
         });
 
@@ -149,15 +150,15 @@ export async function getAllMessages() {
  * @param {Function} [options.progress] - Optional callback function to report progress.
  * @return {Promise<Array>} A promise that resolves to an array of messages.
  */
-export async function findFirstMessage({ startTime, endTime, progress }) {
+export async function findFirstMessage({ friendUid, startTime, endTime, progress }) {
     let mid = 1e3 * Math.round((startTime + endTime) / 2 / 1e3);
     progress?.(mid);
-    let msgs = await isExistMessage(mid, 1);
+    let msgs = await isExistMessage({ friendUid, cursor: mid, limit: 1 });
 
     if (Math.abs(endTime - startTime) <= 1e3) return msgs;
 
-    if (msgs?.length) return await findFirstMessage(startTime, mid - 1);
-    else return await findFirstMessage(mid + 1, endTime);
+    if (msgs?.length) return await findFirstMessage({ friendUid, startTime, endTime: mid - 1 });
+    else return await findFirstMessage({ friendUid, startTime: mid + 1, endTime });
 }
 
 /**
@@ -170,13 +171,13 @@ export async function findFirstMessage({ startTime, endTime, progress }) {
  * @return {Promise<Object|Error>} A promise that resolves to the GraphQL payload of the messages,
  * or an error if there are no results.
  */
-async function getMessagesAfter({ msgId, limit = 50, friendUid }) {
+async function getMessagesAfter({ friendUid, msgId, direction = 'down', limit = 50 }) {
     const res = await fetchGraphQl(
         {
-            message_id: msgId,
-            limit: limit,
-            direction: 'down',
             other_user_fbid: friendUid,
+            message_id: msgId,
+            direction,
+            limit,
         },
         'https://www.facebook.com/ajax/mercury/search_context.php'
     );
@@ -196,7 +197,7 @@ async function getMessagesAfter({ msgId, limit = 50, friendUid }) {
  * @return {Promise<Array|undefined>} A promise that resolves to an array of message nodes if the message exists,
  * or undefined if it doesn't.
  */
-async function isExistMessage({ cursor, limit = 50, friendUid }) {
+async function isExistMessage({ friendUid, cursor, limit = 50 }) {
     const res = await fetchGraphQl({
         query: {
             o0: {

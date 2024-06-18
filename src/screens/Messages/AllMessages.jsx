@@ -70,9 +70,9 @@ export default function AllMessages() {
         console.log(selectedData);
     };
 
-    const onClickFirstMessages = threadId => () => {
+    const onClickFirstMessages = record => () => {
         navigate('/messages/first', {
-            state: { threadId: threadId },
+            state: { threadId: record.id },
         });
     };
 
@@ -128,13 +128,17 @@ export default function AllMessages() {
                                 }}
                             >
                                 <Space>
-                                    <Avatar.Group max={{ count: 10 }}>
-                                        {record.participants
-                                            .filter(_ => _.id != profile?.id)
-                                            .map(_ => (
-                                                <Avatar key={_.id} src={_.avatar} />
-                                            ))}
-                                    </Avatar.Group>
+                                    {record.image ? (
+                                        <Avatar shape="square" src={record.image} />
+                                    ) : (
+                                        <Avatar.Group max={{ count: 5 }}>
+                                            {record.participants
+                                                .filter(_ => _.id != profile?.id)
+                                                .map(_ => (
+                                                    <Avatar key={_.id} src={_.avatar} />
+                                                ))}
+                                        </Avatar.Group>
+                                    )}
                                 </Space>
                             </Dropdown>
                         ) : (
@@ -219,7 +223,7 @@ export default function AllMessages() {
                             type="primary"
                             icon={<i className="fa-solid fa-clock-rotate-left"></i>}
                             style={{ marginRight: '5px' }}
-                            onClick={onClickFirstMessages(record.id)}
+                            onClick={onClickFirstMessages(record)}
                         ></Button>
                     </Tooltip>
                     <Tooltip placement="topLeft" title={t('Download')}>
